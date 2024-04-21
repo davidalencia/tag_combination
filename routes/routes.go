@@ -11,14 +11,14 @@ func Register(app *fiber.App) {
 	app.Get("/svg", func(c *fiber.Ctx) error {
 		color :=  c.Query("bg")
 		if color == "" {
-			color = "white"
+			color = "ffffff"
 		}
 		textColor := c.Query("textcolor")
 		if textColor == "" {
-			textColor = "black"
+			textColor = "000000"
 		}
 		c.Set(fiber.HeaderContentType, "image/svg+xml")
-		return c.SendString(svg(color, textColor, c.Query("text")))
+		return c.SendString(svg("#"+color, "#"+textColor, c.Query("text")))
 
 	})
 }
