@@ -39,6 +39,6 @@ func main() {
 
   routes.Register(app)
 
-  // app.Listen(getPort())
+  app.Listen(getPort())
 
 }
