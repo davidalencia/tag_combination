@@ -27,12 +27,14 @@ type User struct {
 func ConfigDB(app *fiber.App) {
 	godotenv.Load("../../.env")
 	myEnv, _ := godotenv.Read()
-	fmt.Println(myEnv["DSN"])
+	fmt.Println("printf env")
+	fmt.Println(myEnv)
 	db, err := gorm.Open(postgres.Open(myEnv["DSN"]), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
 
   if err != nil {
+		fmt.Println(err)
     panic("failed to connect database")
   }
 
