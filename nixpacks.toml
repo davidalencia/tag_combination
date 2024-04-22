@@ -1,7 +1,7 @@
 # nixpacks.toml
 
 [phases.setup]
-nixPkgs = ['...', 'go', 'nodejs', 'npm']
+nixPkgs = ['...', 'nodejs']
 
 [phases.install]
 cmds = ['go mod download', 'npm install --prefix frontend/']
