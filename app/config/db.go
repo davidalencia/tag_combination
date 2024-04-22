@@ -1,14 +1,12 @@
 package config
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-
-	"github.com/joho/godotenv"
 )
 
 type Product struct {
@@ -25,16 +23,10 @@ type User struct {
 
 
 func ConfigDB(app *fiber.App) {
-	godotenv.Load("../../.env")
-	myEnv, _ := godotenv.Read()
-	fmt.Println("printf env")
-	fmt.Println(myEnv)
-	db, err := gorm.Open(postgres.Open(myEnv["DSN"]), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(os.Getenv("DSN")), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
-
   if err != nil {
-		fmt.Println(err)
     panic("failed to connect database")
   }
 

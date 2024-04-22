@@ -7,7 +7,7 @@ import (
 
 
 func ConfigEnv(app *fiber.App) {
-	godotenv.Load("../../.env")
+	godotenv.Load(".env")
 	myEnv, _ := godotenv.Read()
 
 	app.Use(func(c *fiber.Ctx) error {
