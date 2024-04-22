@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -25,6 +27,7 @@ type User struct {
 func ConfigDB(app *fiber.App) {
 	godotenv.Load("../../.env")
 	myEnv, _ := godotenv.Read()
+	fmt.Println(myEnv["DSN"])
 	db, err := gorm.Open(postgres.Open(myEnv["DSN"]), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
