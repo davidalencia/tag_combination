@@ -9,7 +9,19 @@ import (
 	"github.com/lucasb-eyer/go-colorful"
 )
 
+func min(x,y float64) float64 {
+	if x<y {
+		return x
+	}
+	return y
+}
 
+func max(x,y float64) float64 {
+	if x>y {
+		return x
+	}
+	return y
+}
 
 func notionPatch(endpoint, body string) []byte {
 	request := fiber.Patch("https://api.notion.com/v1/" + endpoint)
@@ -57,19 +69,19 @@ func notionPost(endpoint string) []byte {
 
 func UpdateDatabase(page_id string){
 	colors_mapping := map[string]string{
-		"default": "#9B9A97",
-		"gray": "#9B9A97",
-		"brown": "#64473A",
-		"orange": "#D9730D",
-		"yellow": "#DFAB01",
-		"green": "#0F7B6C",
-		"blue": "#0B6E99",
-		"purple": "#6940A5",
-		"pink": "#AD1A72",
-		"red": "#E03E3E",
+		"default": "#ABAAA7",
+		"gray": "#ABAAA7",
+		"brown": "#74574A",
+		"orange": "#E9831D",
+		"yellow": "#EFBB11",
+		"green": "#1F8B7C",
+		"blue": "#1B7EA9",
+		"purple": "#7950B5",
+		"pink": "#BD2A82",
+		"red": "#F04E4E",
 	}
 
-	db := notionPost("databases/62d01a2d65284e2f847809abfe3b88da/query")
+	db := notionPost("databases/"+page_id+"/query")
 	jsonparser.ArrayEach(db, func(result []byte, dataType jsonparser.ValueType, offset int, err error) {
 		colors := []string{}
 		jsonparser.ArrayEach(result, func(tag []byte, dataType jsonparser.ValueType, offset int, err error) {
@@ -86,11 +98,13 @@ func UpdateDatabase(page_id string){
 				id, _ := jsonparser.GetString(result, "id")
 				week, _ := jsonparser.GetInt(result, "properties", "Week", "formula", "number")
 				weekStr := strconv.Itoa(int(week))
-				color := mixColors(colorfulColors).Hex()[1:]
+				h,s,v := mixColors(colorfulColors).Hsv()
+				color := colorful.Hsv(h, min(s, 0.45), max(0.7, v)).Hex()[1:]
 				textColor := "ffffff"
 				if color == "ffffff"{
 					textColor = "000000"
 				}
+				// fmt.Printf("%s, %s, %s, %s\n", id, weekStr, color, textColor)
 				notionPatch("pages/"+string(id), 
 					fmt.Sprintf(`{"cover": {
 						"type": "external",
@@ -114,5 +128,3 @@ func mixColors (colorArray []colorful.Color) colorful.Color{
 	}
 	return mixedColor
 }
-
-//dateBetween(prop("Date"), fromTimestamp(927180000000), "weeks")
